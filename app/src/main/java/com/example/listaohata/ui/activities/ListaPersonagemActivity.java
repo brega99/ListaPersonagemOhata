@@ -9,9 +9,9 @@ import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.listaohata.R;
 import com.example.listaohata.dao.PersonagemDao;
 import com.example.listaohata.model.Personagem;
-import com.example.listaohata.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
@@ -23,9 +23,9 @@ public class ListaPersonagemActivity extends AppCompatActivity {
 
     private final PersonagemDao dao = new PersonagemDao();
 
-    @Override
+    @Override /*começo da criação*/
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        super.onCreate(savedInstanceState);/*Iniciar toda a parte do android*/
         setContentView(R.layout.activity_lista_personagem);
         setTitle(TITULO_APPBAR_LISTA_PERSONAGENS);
 
@@ -49,7 +49,7 @@ public class ListaPersonagemActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        super.onResume();
+        super.onResume();//Salvando par não dar back e apagar
 
 
         ListView listadePersonagem = findViewById(R.id.activity_main_lista_personagem);
@@ -61,14 +61,14 @@ public class ListaPersonagemActivity extends AppCompatActivity {
 
     private void ConfiguraItenPorClique(ListView listadePersonagem, List<Personagem> personagens) {
         listadePersonagem.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                                     @Override
-                                                     public void onItemClick(AdapterView<?> adapterView, View view, int posicao, long id) {
-                                                         Personagem personagenEscolhido = (Personagem) adapterView.getItemAtPosition(posicao);
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int posicao, long id) {
+                Personagem personagenEscolhido = (Personagem) adapterView.getItemAtPosition(posicao);
 
-                                                         AbreFormularioEditar(personagenEscolhido);
+                AbreFormularioEditar(personagenEscolhido);
 
-                                                     }
-                                                 }
+            }
+        }
         );
     }
 

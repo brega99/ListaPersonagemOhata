@@ -59,7 +59,7 @@ public class FormularioPersonagemActivity extends AppCompatActivity {
     }
 
     private void configuraBotaoSalvar() {
-        // Pegando  o botao de salvar, para por um listener de ações nele, no caso, salvar  informaçõa do personagem.
+        // Pega o botão que salva as informções no personagem
         Button btSalvar = findViewById(R.id.bt_salvar);
         btSalvar.setOnClickListener(new View.OnClickListener() {
                                         @Override

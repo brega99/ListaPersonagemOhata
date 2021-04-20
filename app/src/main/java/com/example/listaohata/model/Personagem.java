@@ -5,7 +5,7 @@ import androidx.annotation.NonNull;
 import java.io.Serializable;
 
 public class Personagem implements Serializable {
-    // variaveis de que serao usadas para receber dados do personagem
+    // Váriaveis utilizadas para o armazenamento de dados da personagem
     private String nome;
     private String nacimento;
     private String altura;
@@ -13,6 +13,7 @@ public class Personagem implements Serializable {
 
 
     public Personagem(String nome, String nascimento, String altura) {
+        //Setando Variáveis
         this.nome = nome;
         this.nacimento = nascimento;
         this.altura = altura;
@@ -22,10 +23,10 @@ public class Personagem implements Serializable {
     public Personagem() {
     }
 
-
+    //Convertendo para exibir
     @NonNull
     @Override
-    public String toString()// para poder exibir nome salvo do personagem la lissta
+    public String toString()// Permite a exibição do nome da personagem na lista
     {
         return nome;
     }

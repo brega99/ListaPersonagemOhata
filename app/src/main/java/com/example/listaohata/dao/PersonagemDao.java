@@ -7,8 +7,8 @@ import java.util.List;
 
 public class PersonagemDao {
 
-    private final static List<Personagem> personagens = new ArrayList<>();
-    private static int contadorDeId = 1;
+    private final static List<Personagem> personagens = new ArrayList<>(); //Declaração
+    private static int contadorDeId = 1; //Atribuir contador para o valor de 1
 
     public void salva(Personagem personagemSalvo)//metodo para salvar dados do personagem
     {
@@ -21,7 +21,7 @@ public class PersonagemDao {
         contadorDeId++;
     }
 
-    public void editar(Personagem personagem)//metoro para poder editar dados do personagem
+    public void editar(Personagem personagem)//metodo de edição da personagem
     {
         Personagem personagemEscolhido = BuscaPersonagenId(personagem);
         if (personagemEscolhido != null) {
