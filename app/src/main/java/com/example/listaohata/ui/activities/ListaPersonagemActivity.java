@@ -1,5 +1,6 @@
 package com.example.listaohata.ui.activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.ContextMenu;
@@ -10,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.listaohata.R;
@@ -28,13 +30,18 @@ public class ListaPersonagemActivity extends AppCompatActivity {
     private ArrayAdapter<Personagem> adapter;
 
     @Override /*começo da criação*/
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@NonNull Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);/*Iniciar toda a parte do android*/
         setContentView(R.layout.activity_lista_personagem);
         setTitle(TITULO_APPBAR_LISTA_PERSONAGENS);
-
         ConfiguraFabNovoPersonagem();
         configuraLista();
+        new AlertDialog.Builder(this)
+                .setTitle("Removendo Personagem")
+                .setMessage("Tem certeza que deseja remover?")
+                .setPositiveButton("Sim", null)
+                .setNegativeButton("Não", null)
+                .show();
     }
 
     private void ConfiguraFabNovoPersonagem() {
@@ -55,29 +62,54 @@ public class ListaPersonagemActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();//Salvando para não dar back e apagar
+        atualizaPersonagem();
+    }
+
+    private void atualizaPersonagem() {
         adapter.clear();
         adapter.addAll(dao.todos());
+    }
 
-
+    private void remove(Personagem personagem) {
+        dao.remove(personagem);
+        adapter.remove(personagem);
     }
 
     @Override//apertar botão abre janela
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
-        menu.add("Remover");
+        getMenuInflater().inflate(R.menu.activity_lista_personagem_menu, menu);
     }
 
     @Override//permite selecionar item e dar retorno para o adapter
     public boolean onContextItemSelected(@NonNull MenuItem item) {
-        AdapterView.AdapterContextMenuInfo menuInfo = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        Personagem personagemEscolhido = adapter.getItem(menuInfo.position);
-        adapter.remove(personagemEscolhido);
+        return configuraMenu(item);
+    }
+
+    //Remover item da lista
+    private boolean configuraMenu(@NonNull MenuItem item) {
+        int itemId = item.getItemId();
+        if (itemId == R.id.activity_lista_personagem_menu_remover) {
+            new AlertDialog.Builder(this)
+                    .setTitle("Removendo Personagem")
+                    .setMessage("Tem certeza que deseja remover?")
+                    .setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            AdapterView.AdapterContextMenuInfo menuInfo = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+                            Personagem personagemEscolhido = adapter.getItem(menuInfo.position);
+                            remove(personagemEscolhido);
+                        }
+                    })
+                    .setNegativeButton("Não", null)
+                    .show();
+        }
         return super.onContextItemSelected(item);
     }
 
+
     private void configuraLista() {
         ListView listadePersonagem = findViewById(R.id.activity_main_lista_personagem);
-        //final List<Personagem> personagens = dao.todos();
         listaDePersonagens(listadePersonagem);
         ConfiguraItenPorClique(listadePersonagem);
         registerForContextMenu(listadePersonagem);
@@ -85,14 +117,14 @@ public class ListaPersonagemActivity extends AppCompatActivity {
 
     private void ConfiguraItenPorClique(ListView listadePersonagem) {
         listadePersonagem.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int posicao, long id) {
-                Personagem personagenEscolhido = (Personagem) adapterView.getItemAtPosition(posicao);
+                                                     @Override
+                                                     public void onItemClick(AdapterView<?> adapterView, View view, int posicao, long id) {
+                                                         Personagem personagenEscolhido = (Personagem) adapterView.getItemAtPosition(posicao);
 
-                AbreFormularioEditar(personagenEscolhido);
+                                                         AbreFormularioEditar(personagenEscolhido);
 
-            }
-        }
+                                                     }
+                                                 }
         );
     }
 
