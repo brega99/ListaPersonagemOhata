@@ -2,11 +2,14 @@ package com.example.listaohata.ui.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.ContextMenu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.listaohata.R;
@@ -22,6 +25,7 @@ import static com.example.listaohata.ui.activities.ConstantesActivities.TITULO_A
 public class ListaPersonagemActivity extends AppCompatActivity {
 
     private final PersonagemDao dao = new PersonagemDao();
+    private ArrayAdapter<Personagem> adapter;
 
     @Override /*começo da criação*/
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +34,7 @@ public class ListaPersonagemActivity extends AppCompatActivity {
         setTitle(TITULO_APPBAR_LISTA_PERSONAGENS);
 
         ConfiguraFabNovoPersonagem();
+        configuraLista();
     }
 
     private void ConfiguraFabNovoPersonagem() {
@@ -49,17 +54,36 @@ public class ListaPersonagemActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        super.onResume();//Salvando par não dar back e apagar
+        super.onResume();//Salvando para não dar back e apagar
+        adapter.clear();
+        adapter.addAll(dao.todos());
 
 
-        ListView listadePersonagem = findViewById(R.id.activity_main_lista_personagem);
-        final List<Personagem> personagens = dao.todos();
-        listaDePersonagens(listadePersonagem, personagens);
-
-        ConfiguraItenPorClique(listadePersonagem, personagens);
     }
 
-    private void ConfiguraItenPorClique(ListView listadePersonagem, List<Personagem> personagens) {
+    @Override//apertar botão abre janela
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        menu.add("Remover");
+    }
+
+    @Override//permite selecionar item e dar retorno para o adapter
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+        AdapterView.AdapterContextMenuInfo menuInfo = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        Personagem personagemEscolhido = adapter.getItem(menuInfo.position);
+        adapter.remove(personagemEscolhido);
+        return super.onContextItemSelected(item);
+    }
+
+    private void configuraLista() {
+        ListView listadePersonagem = findViewById(R.id.activity_main_lista_personagem);
+        //final List<Personagem> personagens = dao.todos();
+        listaDePersonagens(listadePersonagem);
+        ConfiguraItenPorClique(listadePersonagem);
+        registerForContextMenu(listadePersonagem);
+    }
+
+    private void ConfiguraItenPorClique(ListView listadePersonagem) {
         listadePersonagem.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int posicao, long id) {
@@ -78,7 +102,8 @@ public class ListaPersonagemActivity extends AppCompatActivity {
         startActivity(vaiParaOfotmulario);
     }
 
-    private void listaDePersonagens(ListView listadePersonagem, List<Personagem> personagens) {
-        listadePersonagem.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, personagens));
+    private void listaDePersonagens(ListView listadePersonagem) {
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
+        listadePersonagem.setAdapter(adapter);
     }
 }
