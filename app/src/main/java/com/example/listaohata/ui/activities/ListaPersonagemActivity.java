@@ -36,6 +36,7 @@ public class ListaPersonagemActivity extends AppCompatActivity {
         setTitle(TITULO_APPBAR_LISTA_PERSONAGENS);
         ConfiguraFabNovoPersonagem();
         configuraLista();
+        //Janela perguntando se deseja deletar o item criado
         new AlertDialog.Builder(this)
                 .setTitle("Removendo Personagem")
                 .setMessage("Tem certeza que deseja remover?")
@@ -47,6 +48,7 @@ public class ListaPersonagemActivity extends AppCompatActivity {
     private void ConfiguraFabNovoPersonagem() {
         FloatingActionButton BtNovoPersonagem = findViewById(R.id.fab_add);
         BtNovoPersonagem.setOnClickListener(new View.OnClickListener() {
+            //quando clicar abre o formulario
             @Override
             public void onClick(View v) {
 
@@ -55,6 +57,7 @@ public class ListaPersonagemActivity extends AppCompatActivity {
         });
     }
 
+    //abrir formulario
     private void AbreFormulario() {
         startActivity(new Intent(ListaPersonagemActivity.this, FormularioPersonagemActivity.class));
     }
@@ -65,11 +68,13 @@ public class ListaPersonagemActivity extends AppCompatActivity {
         atualizaPersonagem();
     }
 
+    //atualiza item/personagem
     private void atualizaPersonagem() {
         adapter.clear();
         adapter.addAll(dao.todos());
     }
 
+    //remove personagem
     private void remove(Personagem personagem) {
         dao.remove(personagem);
         adapter.remove(personagem);
@@ -107,7 +112,7 @@ public class ListaPersonagemActivity extends AppCompatActivity {
         return super.onContextItemSelected(item);
     }
 
-
+    //config da lista
     private void configuraLista() {
         ListView listadePersonagem = findViewById(R.id.activity_main_lista_personagem);
         listaDePersonagens(listadePersonagem);
@@ -115,6 +120,7 @@ public class ListaPersonagemActivity extends AppCompatActivity {
         registerForContextMenu(listadePersonagem);
     }
 
+    // configuração dos itens criados
     private void ConfiguraItenPorClique(ListView listadePersonagem) {
         listadePersonagem.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                                      @Override
